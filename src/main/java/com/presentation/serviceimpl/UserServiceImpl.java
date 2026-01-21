@@ -1,5 +1,6 @@
 package com.presentation.serviceimpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.presentation.dto.LoginDTO;
 import com.presentation.entity.User;
+import com.presentation.enums.Status;
 import com.presentation.repository.UserRepository;
 import com.presentation.service.UserService;
 
@@ -21,6 +23,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ResponseEntity<String> save(User user) {
 
+		
 		Optional<User> opt = userRepository.findByEmail(user.getEmail());
 
 		if (opt.isPresent()) {
@@ -32,7 +35,36 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Boolean login(LoginDTO loginDTO) {
-		return userRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
+//		return userRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword());
+		 User user = userRepository.findByEmail(loginDTO.getEmail())
+		            .orElseThrow(() ->
+		                    new RuntimeException("Invalid email"));
+
+		    return user.getPassword().equals(loginDTO.getPassword());
 	}
+
+	@Override
+	public List<User> fetchAll() {
+		
+		return userRepository.findAll();
+	}
+
+	@Override
+	public void updateStatus(Long userId) {
+		
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new RuntimeException("User not found with id:"+ userId));
+		
+		if(user.getStatus() == Status.ACTIVE) {
+			user.setStatus(Status.INACTIVE);
+		}else {
+			user.setStatus(Status.ACTIVE);
+		}
+		
+		userRepository.save(user);
+		
+		
+	}
+
 
 }
