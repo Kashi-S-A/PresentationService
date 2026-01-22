@@ -10,6 +10,8 @@ import com.presentation.entity.Rating;
 import com.presentation.entity.User;
 import com.presentation.enums.PresentationStatus;
 import com.presentation.enums.Role;
+import com.presentation.exception.InvalidOperationException;
+import com.presentation.exception.ResourceNotFoundException;
 import com.presentation.repository.PresentationRepo;
 import com.presentation.repository.RatingRepo;
 import com.presentation.repository.UserRepository;
@@ -18,64 +20,59 @@ import com.presentation.service.RatingService;
 @Service
 public class RatingServiceImpl implements RatingService {
 
-	@Autowired
-	private RatingRepo ratingRepo;
+    @Autowired
+    private RatingRepo ratingRepo;
 
-	@Autowired
-	private PresentationRepo presentationRepo;
+    @Autowired
+    private PresentationRepo presentationRepo;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Override
-	public Rating createRating(Integer presentationId, Rating rating) {
+    @Override
+    public Rating createRating(Integer presentationId, Rating rating) {
 
-		Presentation presentation = presentationRepo.findById(presentationId)
-				.orElseThrow(() -> new RuntimeException("Presentation not found"));
+        Presentation presentation = presentationRepo.findById(presentationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Presentation not found"));
 
-		if (presentation.getUser().getRole() != Role.STUDENT) {
-			throw new RuntimeException("User Must be STUDENT");
-		}
+        if (presentation.getUser().getRole() != Role.STUDENT) {
+            throw new InvalidOperationException("User must be STUDENT");
+        }
 
-		double totalScore = rating.getCommunication() + rating.getConfidence() + rating.getContent()
-				+ rating.getInteraction() + rating.getLiveliness() + rating.getUsageProps();
+        double totalScore = rating.getCommunication()
+                + rating.getConfidence()
+                + rating.getContent()
+                + rating.getInteraction()
+                + rating.getLiveliness()
+                + rating.getUsageProps();
 
-		double averageScore = totalScore / 6;
+        double averageScore = totalScore / 6;
 
-		presentation.setPresentationTotalScore(averageScore);
+        presentation.setPresentationTotalScore(averageScore);
+        presentation.setPresentationStatus(PresentationStatus.COMPLETED);
+        presentationRepo.save(presentation);
 
-		presentation.setPresentationStatus(PresentationStatus.COMPLETED);
+        User user = presentation.getUser();
+        List<Presentation> presentations = user.getPresentations();
 
-		presentationRepo.save(presentation);
+        double userTotalScore = presentations.stream()
+                .mapToDouble(Presentation::getPresentationTotalScore)
+                .sum();
 
-		User user = presentation.getUser();
+        user.setUserTotalScore(userTotalScore / presentations.size());
+        userRepository.save(user);
 
-		List<Presentation> presentations = user.getPresentations();
+        rating.setPresentation(presentation);
+        return ratingRepo.save(rating);
+    }
 
-		double userTotalScore = 0;
+    @Override
+    public Rating getRatingsByPresentation(Integer presentationId) {
 
-		for (Presentation present : presentations) {
-			userTotalScore += present.getPresentationTotalScore();
-		}
+        Presentation presentation = presentationRepo.findById(presentationId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Presentation not found with id: " + presentationId));
 
-		double avgUserTotalScore = userTotalScore / presentations.size();
-
-		user.setUserTotalScore(avgUserTotalScore);
-
-		userRepository.save(user);
-
-		rating.setPresentation(presentation);
-
-		return ratingRepo.save(rating);
-	}
-
-	@Override
-	public Rating getRatingsByPresentation(Integer presentationId) {
-
-		Presentation presentation = presentationRepo.findById(presentationId)
-				.orElseThrow(() -> new RuntimeException("Presentation not found with id: " + presentationId));
-
-		return presentation.getRating();
-	}
-
+        return presentation.getRating();
+    }
 }
