@@ -3,43 +3,56 @@ package com.presentation.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.presentation.entity.Presentation;
+import com.presentation.entity.Rating;
 import com.presentation.entity.User;
+import com.presentation.enums.Status;
+import com.presentation.service.PresentationService;
+import com.presentation.service.RatingService;
 import com.presentation.service.UserService;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/admin")
-@RequiredArgsConstructor
 public class AdminController {
-	
+
 	@Autowired
 	private UserService userService;
-	
-//	 @GetMapping("/users")
-//	    public ResponseEntity<List<User>> getAllUsers() {
-//		 
-//		 userService.getUserByEmail(null)
-//	        return ResponseEntity.ok(adminService.getAllUsers());
-//	    }
-	
-	@GetMapping("/fetchUser")
-	public List<User> getMethodName() {
-		return userService.fetchAll();
+
+	@Autowired
+	private RatingService ratingService;
+
+	@Autowired
+	private PresentationService presentationService;
+
+	// assign
+	@PostMapping("/assign/{adminId}/{studentId}")
+	public ResponseEntity<Presentation> assignPresentation(@PathVariable Integer adminId,
+			@PathVariable Integer studentId, @RequestBody Presentation presentation) {
+		return ResponseEntity.ok(presentationService.assignPresentationToStudent(adminId, studentId, presentation));
 	}
-	
-	@PutMapping("/user/{id}/status")
-	public String toggleUserStatus(@PathVariable Long id) {
-		userService.updateStatus(id);
-		return "User status updated successfully";
+
+	@GetMapping("/users")
+	public List<User> getAllUsers() {
+		return userService.fetchAllStudents();
 	}
-	
+
+	@PutMapping("/users/{id}/{status}")
+	public ResponseEntity<String> toggleUserStatus(@PathVariable Integer id, @PathVariable Status status) {
+		return userService.updateStatus(id, status);
+	}
+
+	@PostMapping("/{presentationId}")
+	public ResponseEntity<Rating> createRating(@PathVariable Integer presentationId, @RequestBody Rating rating) {
+		return ResponseEntity.ok(ratingService.createRating(presentationId, rating));
+	}
+
 }

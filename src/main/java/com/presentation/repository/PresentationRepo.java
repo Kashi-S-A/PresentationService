@@ -8,6 +8,6 @@ import com.presentation.entity.Presentation;
 
 public interface PresentationRepo extends JpaRepository<Presentation, Integer> {
 
-	 List<Presentation> findByUserId(Integer userId);
+	List<Presentation> findByUserId(Integer studentId);
 
 }

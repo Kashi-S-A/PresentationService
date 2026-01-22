@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,11 +26,16 @@ public class Presentation {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
+	
 	private String course;
 	private String topic;
 
 	@Enumerated(EnumType.STRING)
-	private PresentationStatus presentationStatus;
+	private PresentationStatus presentationStatus = PresentationStatus.ASSIGNED;
 
-	private Double userTotalScore;
+	private Double presentationTotalScore;
+
+	@OneToOne
+	@JoinColumn(name = "rating_id")
+	private Rating rating;
 }
