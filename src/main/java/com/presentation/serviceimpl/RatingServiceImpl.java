@@ -55,15 +55,21 @@ public class RatingServiceImpl implements RatingService {
         User user = presentation.getUser();
         List<Presentation> presentations = user.getPresentations();
 
-        double userTotalScore = presentations.stream()
-                .mapToDouble(Presentation::getPresentationTotalScore)
-                .sum();
+    	double userTotalScore = 0;
 
-        user.setUserTotalScore(userTotalScore / presentations.size());
-        userRepository.save(user);
+		for (Presentation present : presentations) {
+			userTotalScore += present.getPresentationTotalScore();
+		}
 
-        rating.setPresentation(presentation);
-        return ratingRepo.save(rating);
+		double avgUserTotalScore = userTotalScore / presentations.size();
+
+		user.setUserTotalScore(avgUserTotalScore);
+
+		userRepository.save(user);
+
+		rating.setPresentation(presentation);
+
+		return ratingRepo.save(rating);
     }
 
     @Override
