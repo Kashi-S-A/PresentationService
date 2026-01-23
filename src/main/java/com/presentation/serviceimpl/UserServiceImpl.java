@@ -38,11 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean login(LoginDTO loginDTO) {
-
-        User user = userRepository.findByEmail(loginDTO.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("Invalid email"));
-
-        return user.getPassword().equals(loginDTO.getPassword());
+        return userRepository.findByEmailAndPassword(loginDTO.getEmail(), loginDTO.getPassword()).isPresent();
     }
 
     @Override

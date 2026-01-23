@@ -20,45 +20,42 @@ import com.presentation.service.RatingService;
 @Service
 public class RatingServiceImpl implements RatingService {
 
-    @Autowired
-    private RatingRepo ratingRepo;
+	@Autowired
+	private RatingRepo ratingRepo;
 
-    @Autowired
-    private PresentationRepo presentationRepo;
+	@Autowired
+	private PresentationRepo presentationRepo;
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Override
-    public Rating createRating(Integer presentationId, Rating rating) {
+	@Override
+	public Rating createRating(Integer presentationId, Rating rating) {
 
-        Presentation presentation = presentationRepo.findById(presentationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Presentation not found"));
+		Presentation presentation = presentationRepo.findById(presentationId)
+				.orElseThrow(() -> new ResourceNotFoundException("Presentation not found"));
 
-        if (presentation.getUser().getRole() != Role.STUDENT) {
-            throw new InvalidOperationException("User must be STUDENT");
-        }
+		if (presentation.getUser().getRole() != Role.STUDENT) {
+			throw new InvalidOperationException("User must be STUDENT");
+		}
 
-        double totalScore = rating.getCommunication()
-                + rating.getConfidence()
-                + rating.getContent()
-                + rating.getInteraction()
-                + rating.getLiveliness()
-                + rating.getUsageProps();
+		double totalScore = rating.getCommunication() + rating.getConfidence() + rating.getContent()
+				+ rating.getInteraction() + rating.getLiveliness() + rating.getUsageProps();
 
-        double averageScore = totalScore / 6;
+		double averageScore = totalScore / 6;
 
-        presentation.setPresentationTotalScore(averageScore);
-        presentation.setPresentationStatus(PresentationStatus.COMPLETED);
-        presentationRepo.save(presentation);
+		presentation.setPresentationTotalScore(averageScore);
+		presentation.setPresentationStatus(PresentationStatus.COMPLETED);
+		presentationRepo.save(presentation);
 
-        User user = presentation.getUser();
-        List<Presentation> presentations = user.getPresentations();
+		User user = presentation.getUser();
+		List<Presentation> presentations = user.getPresentations();
 
-    	double userTotalScore = 0;
+		double userTotalScore = 0;
 
 		for (Presentation present : presentations) {
-			userTotalScore += present.getPresentationTotalScore();
+			if (present.getPresentationTotalScore() != null)
+				userTotalScore += present.getPresentationTotalScore();
 		}
 
 		double avgUserTotalScore = userTotalScore / presentations.size();
@@ -69,16 +66,21 @@ public class RatingServiceImpl implements RatingService {
 
 		rating.setPresentation(presentation);
 
-		return ratingRepo.save(rating);
-    }
+		Rating savedRating = ratingRepo.save(rating);
 
-    @Override
-    public Rating getRatingsByPresentation(Integer presentationId) {
+		presentation.setRating(savedRating);
 
-        Presentation presentation = presentationRepo.findById(presentationId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Presentation not found with id: " + presentationId));
+		presentationRepo.save(presentation);
 
-        return presentation.getRating();
-    }
+		return savedRating;
+	}
+
+	@Override
+	public Rating getRatingsByPresentation(Integer presentationId) {
+
+		Presentation presentation = presentationRepo.findById(presentationId)
+				.orElseThrow(() -> new ResourceNotFoundException("Presentation not found with id: " + presentationId));
+
+		return presentation.getRating();
+	}
 }

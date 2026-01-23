@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.presentation.enums.Role;
 import com.presentation.enums.Status;
 
@@ -35,6 +36,8 @@ public class User {
 	@Column(unique = true)
 	private String email;
 	private Long phone;
+	
+	@JsonIgnore
 	private String password;
 
 	@OneToMany(mappedBy = "user")

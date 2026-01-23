@@ -1,5 +1,6 @@
 package com.presentation.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.presentation.enums.PresentationStatus;
 
 import jakarta.persistence.Entity;
@@ -25,6 +26,7 @@ public class Presentation {
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+	@JsonIgnore
 	private User user;
 	
 	private String course;

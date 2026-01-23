@@ -23,7 +23,7 @@ public class AuthController {
 	private UserService userService;
 	
 	//GET USER BY ID
-	@GetMapping("/user")
+	@GetMapping("/profile")
 	public ResponseEntity<UserDTO> getById(@RequestParam Integer id) {
 		return userService.getById(id);
 	}

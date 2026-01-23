@@ -1,0 +1,343 @@
+{
+  "info": {
+    "_postman_id": "ccb9562a-3c1d-4b7f-9888-e7623d0f4639",
+    "name": "PresentationApp",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40510060",
+    "_collection_link": "https://go.postman.co/collection/40510060-ccb9562a-3c1d-4b7f-9888-e7623d0f4639?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Dingi\",\r\n    \"email\": \"dingi@gmail.com\",\r\n    \"phone\": 6545678,\r\n    \"password\": \"dingi123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"manga@gmail.com\",\r\n    \"password\": \"maa123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"manga@gmail.com\",\r\n    \"password\": \"maa123\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/profile?id=3",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "profile"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "New Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"course\" : \"Spring Boot\",\r\n    \"topic\" : \"Exception Handling\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/admin/assign/2/3",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "admin",
+                "assign",
+                "2",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All students",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"course\" : \"Spring Boot\",\r\n    \"topic\" : \"Exception Handling\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/admin/students",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "admin",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Student Status",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"course\" : \"Spring Boot\",\r\n    \"topic\" : \"Exception Handling\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/admin/users/1/ACTIVE",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "admin",
+                "users",
+                "1",
+                "ACTIVE"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rate Presentation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"communication\" : 10,\r\n    \"confidence\" : 5,\r\n    \"content\" : 3,\r\n    \"interaction\" : 4,\r\n    \"liveliness\" : 6,\r\n    \"usageProps\" : 7\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/admin/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "admin",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Presentation",
+      "item": [
+        {
+          "name": "All Presentation By Student Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"manga@gmail.com\",\r\n    \"password\": \"maa123\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/presentation/student/3",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "presentation",
+                "student",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Presentation By Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"manga@gmail.com\",\r\n    \"password\": \"maa123\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/presentation/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "presentation",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "change Presentation status",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"manga@gmail.com\",\r\n    \"password\": \"maa123\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/presentation/change-status/1?status=COMPLETED",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "presentation",
+                "change-status",
+                "1"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "COMPLETED"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Rating",
+      "item": [
+        {
+          "name": "Get Rating By Presentation Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"manga@gmail.com\",\r\n    \"password\": \"maa123\"\r\n}"
+            },
+            "url": {
+              "raw": "123456789{    \"communication\": 8,    \"confidence\": 9,    \"content\": 7,    \"id\": 2,    \"interaction\": 9,    \"liveliness\": 10,    \"usageProps\": 6}",
+              "host": [
+                "123456789{    \"communication\": 8,    \"confidence\": 9,    \"content\": 7,    \"id\": 2,    \"interaction\": 9,    \"liveliness\": 10,    \"usageProps\""
+              ],
+              "port": " 6}"
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

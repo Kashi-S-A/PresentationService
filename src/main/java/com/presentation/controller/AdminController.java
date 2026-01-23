@@ -40,7 +40,7 @@ public class AdminController {
 		return ResponseEntity.ok(presentationService.assignPresentationToStudent(adminId, studentId, presentation));
 	}
 
-	@GetMapping("/users")
+	@GetMapping("/students")
 	public List<User> getAllUsers() {
 		return userService.fetchAllStudents();
 	}
